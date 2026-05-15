@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snake Game</title>
+  </head>
+  <body>
+    <!-- Main game container -->
+    <div id="game-container">
+      <!-- Score panel -->
+      <div id="score-panel">
+        <div class="score-item">
+          <span class="score-label">SCORE</span>
+          <span id="score">0</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">HIGH SCORE</span>
+          <span id="high-score">0</span>
+        </div>
+      </div>
+
+      <!-- Game canvas -->
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Start screen overlay -->
+      <div id="start-screen" class="overlay">
+        <h1>SNAKE</h1>
+        <p>Press any arrow key, WASD, or Space to start</p>
+      </div>
+
+      <!-- Game over overlay -->
+      <div id="game-over" class="overlay hidden">
+        <h1>GAME OVER</h1>
+        <p>Final Score: <span id="final-score">0</span></p>
+        <button id="restart-btn">Play Again</button>
+        <p class="hint">or press Enter</p>
+      </div>
+
+      <!-- Pause overlay -->
+      <div id="pause-screen" class="overlay hidden">
+        <h1>PAUSED</h1>
+        <p>Press Space to resume</p>
+      </div>
+
+      <!-- Controls info -->
+      <div id="controls-info">
+        <span>Arrow Keys / WASD — Move</span>
+        <span>Space — Pause</span>
+        <span>Enter — Restart</span>
+      </div>
+    </div>
+
+    <!-- Dev toggle button -->
+    <button id="dev-toggle" class="dev-toggle">DEV</button>
+
+    <!-- Dev ops panel -->
+    <div id="dev-panel" class="overlay hidden">
+      <h2>DEV OPS</h2>
+      <p class="dev-hint">No cheaty-cheaty</p>
+      <div class="dev-section">
+        <label>Speed</label>
+        <div class="dev-row">
+          <label><input type="radio" name="speed-mode" value="auto" checked> Auto</label>
+        </div>
+        <div class="dev-row">
+          <label><input type="radio" name="speed-mode" value="manual"> Manual</label>
+          <input type="number" id="dev-speed-input" value="150" min="10" max="1000" disabled>
+          <button id="dev-speed-apply">Apply</button>
+        </div>
+        <p class="dev-speed-hint">lower number = faster, higher = slower</p>
+      </div>
+      <div class="dev-section">
+        <label>Score</label>
+        <div class="dev-row">
+          <input type="number" id="dev-score-input" value="0" min="0">
+          <button id="dev-score-apply">Set</button>
+        </div>
+      </div>
+      <button id="dev-close">Close</button>
+    </div>
+
+    <!-- Game logic -->
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
