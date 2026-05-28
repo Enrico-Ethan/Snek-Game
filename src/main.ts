@@ -671,7 +671,9 @@ function moveSnake(): void {
     direction = directionQueue.shift()!;
   }
 
-  const head = { ...snake[0] };
+  const headSegment = snake[0];
+  if (!headSegment) return;
+  const head = { ...headSegment };
   head.x += direction.x;
   head.y += direction.y;
 
@@ -708,7 +710,8 @@ function initFoods(): void {
 
 // Check for wall collision and self collision
 function collisionDetection(): boolean {
-  const head = snake[0];
+  const head = getSnakeHead();
+  if (!head) return false;
 
   // Wall collision — outside grid bounds
   if (
@@ -722,7 +725,9 @@ function collisionDetection(): boolean {
 
   // Self collision — head overlaps any body segment
   for (let i = 1; i < snake.length; i++) {
-    if (head.x === snake[i].x && head.y === snake[i].y) {
+    const segment = snake[i];
+    if (!segment) continue;
+    if (head.x === segment.x && head.y === segment.y) {
       return true;
     }
   }
@@ -732,7 +737,8 @@ function collisionDetection(): boolean {
 
 // Check if the snake's head is on any food, returns index or -1
 function checkFoodEaten(): number {
-  const head = snake[0];
+  const head = getSnakeHead();
+  if (!head) return -1;
   return foods.findIndex((f) => f.x === head.x && f.y === head.y);
 }
 
@@ -767,6 +773,10 @@ function isNearSnake(cell: { x: number; y: number }): boolean {
   return snake.some(
     (segment) => Math.abs(segment.x - cell.x) <= 1 && Math.abs(segment.y - cell.y) <= 1
   );
+}
+
+function getSnakeHead(): { x: number; y: number } | null {
+  return snake[0] ?? null;
 }
 
 function isCellFree(cell: { x: number; y: number }): boolean {
@@ -862,7 +872,8 @@ function handlePortalTeleport(): void {
   const now = performance.now();
   if (now < portalCooldownUntil) return;
 
-  const head = snake[0];
+  const head = getSnakeHead();
+  if (!head) return;
   if (head.x === portals.a.x && head.y === portals.a.y && isExitSafe(portals.b, direction)) {
     snake[0] = { ...portals.b };
     portalImmunityUntil = now + 300;
@@ -1091,7 +1102,7 @@ function handleKeyPress(e: KeyboardEvent): void {
 
   // Prevent 180-degree reverse against the last queued direction
   const lastDir = directionQueue.length > 0
-    ? directionQueue[directionQueue.length - 1]
+    ? directionQueue[directionQueue.length - 1]!
     : direction;
 
   if (newDir.x === -lastDir.x && newDir.y === -lastDir.y) {
@@ -1280,7 +1291,7 @@ function spawnEnemy(): void {
       { x: cell.x - dir.x * 2, y: cell.y - dir.y * 2 },
     ];
 
-    if (segments.every((segment) => isSpawnCellFree(segment)) && isExitSafe(segments[0], dir)) {
+    if (segments.every((segment) => isSpawnCellFree(segment)) && isExitSafe(segments[0]!, dir)) {
       enemies.push({ segments, dir, axis });
       return;
     }
@@ -1295,6 +1306,7 @@ function moveEnemies(): void {
   enemies = enemies
     .map((enemy) => {
       const head = enemy.segments[0];
+      if (!head) return null;
       const next = { x: head.x + enemy.dir.x, y: head.y + enemy.dir.y };
       if (next.x < 0 || next.x >= CELL_COUNT || next.y < 0 || next.y >= CELL_COUNT) {
         return null;
@@ -1308,28 +1320,36 @@ function moveEnemies(): void {
 function handleEnemyPortalTeleport(): void {
   if (!portalActive || !portals || enemies.length === 0) return;
 
+  const { a, b } = portals;
+
   const now = performance.now();
   if (now < portalCooldownUntil) return;
 
   enemies.forEach((enemy) => {
     const head = enemy.segments[0];
-    if (head.x === portals.a.x && head.y === portals.a.y && isExitSafe(portals.b, enemy.dir)) {
-      enemy.segments[0] = { ...portals.b };
-    } else if (head.x === portals.b.x && head.y === portals.b.y && isExitSafe(portals.a, enemy.dir)) {
-      enemy.segments[0] = { ...portals.a };
+    if (!head) return;
+    if (head.x === a.x && head.y === a.y && isExitSafe(b, enemy.dir)) {
+      enemy.segments[0] = { ...b };
+    } else if (head.x === b.x && head.y === b.y && isExitSafe(a, enemy.dir)) {
+      enemy.segments[0] = { ...a };
     }
   });
 }
 
 function handleEnemyCollisions(): boolean {
   if (enemies.length === 0) return false;
-  const head = snake[0];
+  const head = getSnakeHead();
+  if (!head) return false;
 
   let gameOver = false;
   const remainingEnemies: typeof enemies = [];
 
   enemies.forEach((enemy) => {
     const enemyHead = enemy.segments[0];
+    if (!enemyHead) {
+      remainingEnemies.push(enemy);
+      return;
+    }
     const enemyBody = enemy.segments.slice(1);
     const headHitsBody = enemyBody.some((segment) => segment.x === head.x && segment.y === head.y);
     const headsCollide = enemyHead.x === head.x && enemyHead.y === head.y;
@@ -1373,11 +1393,13 @@ function spawnPowerup(cell: { x: number; y: number }): void {
 
 function handlePowerupPickup(): boolean {
   if (powerups.length === 0) return false;
-  const head = snake[0];
+  const head = getSnakeHead();
+  if (!head) return false;
   const index = powerups.findIndex((powerup) => powerup.x === head.x && powerup.y === head.y);
   if (index === -1) return false;
 
   const powerup = powerups[index];
+  if (!powerup) return false;
   powerups.splice(index, 1);
 
   if (powerup.type === 'nuke') {
