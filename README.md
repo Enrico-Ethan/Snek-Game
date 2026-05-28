@@ -1,48 +1,47 @@
-# snek-game
+# Evolved Snake
 
-This template should help get you started developing with Vue 3 in Vite.
+## Vercel Link
+[https://your-project.vercel.app](https://snek-game-evo.vercel.app/)
 
-## Recommended IDE Setup
+## Design Concept
+My version of Snake keeps the original core gameplay loop of eating food and growing longer, but introduces several mechanics that significantly change how the player approaches survival and strategy.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+I added portal tiles that allow the snake to teleport across the map. This increases movement flexibility and creates new escape routes since entering a portal can either save the player or place them in danger or unvafourable positions.
 
-## Recommended Browser Setup
+Enemies are also introduced as moving threats on the map. Players can avoid them or eliminate them, and defeating enemies provides a chance to obtain power-ups. These power-ups creates a reward system that encourages risk-taking instead of only avoiding obstacles.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+The game also scales difficulty over time by increasing snake speed as the player survives longer. Additionally, after collecting 20 fruits, extra food spawns on the board, increasing map pressure and decision complexity.
 
-## Type Support for `.vue` Imports in TS
+Finally, I added a time-based game mode where players must collect food before the timer runs out. Successfully eating food resets the timer, creating a fast-paced survival loop.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Overall, these changes transform Snake from a simple reflex game into a more strategic and dynamic experience focused on risk management, timing, and decision-making. More importantly FUN.
 
-## Customize configuration
+## How My Version Is Different
+On this version I added:
+- portals
+- enemies
+- more fruit
+- powerups
+- time mode
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## How To Play
+Use WASD to move
+Spacebar to pause
+Enter to restart
 
-## Project Setup
+The more you progress the faster the snake will be
 
-```sh
-npm install
-```
+After each 20 fruits eaten, the game will add +1 fruit to the board.
 
-### Compile and Hot-Reload for Development
+Portals can be entered on anyside but if the exit portal is a guarantee death then you will ignore the portal
 
-```sh
-npm run dev
-```
+Enemies will occasionally spawn on the walls of map, they will only move forward and they will be gone after reaching the otherside.
+You can kill the enemies by simply letting them hit you in the body (like slither.io)
+You can die to them if you bump them.
+Enemies killed by you will drop powerups
+The power ups include:
+- nuke (any fruit in the board will be eaten)
+- double points (double points)
+- frenzy (adds 5 fruits to the current board)
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Time mode is basically you play with a timer, after hitting 0 you will lose, timer will reset when a fruit is eaten.
