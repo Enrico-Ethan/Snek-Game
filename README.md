@@ -1,7 +1,7 @@
 # Evolved Snake
 
 ## Vercel Link
-[https://your-project.vercel.app](https://snek-game-evo.vercel.app/)
+[https://snek-game-evo.vercel.app/](https://snek-game-evo.vercel.app/)
 
 ## Design Concept
 My version of Snake keeps the original core gameplay loop of eating food and growing longer, but introduces several mechanics that significantly change how the player approaches survival and strategy.
